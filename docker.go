@@ -48,6 +48,9 @@ type (
 		Pull        bool     // Docker build pull
 		Compress    bool     // Docker build compress
 		Repo        string   // Docker build repository
+        RepoRegistry string
+        RepoUsername string
+        RepoPassword string
 		LabelSchema []string // Label schema map
 	}
 
@@ -275,7 +278,19 @@ func commandTag(build Build, tag string) *exec.Cmd {
 
 // helper function to create the docker push command.
 func commandPush(build Build, tag string) *exec.Cmd {
-	target := fmt.Sprintf("%s:%s", build.Repo, tag)
+	target := fmt.Sprintf("%s:%s", build.Repo, tag)  
+    loginCom := exec.Command(
+                    dockerExe, "login",
+                    "-u", build.RepoUsername,
+                    "-p", build.RepoPassword,
+                    build.RepoRegistry,
+                )
+    err := loginCom.Run()
+    if err != nil {
+      fmt.Println("Error push authenticating")
+      return nil
+    }
+  
 	return exec.Command(dockerExe, "push", target)
 }
 
