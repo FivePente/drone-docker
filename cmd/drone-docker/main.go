@@ -177,6 +177,21 @@ func main() {
 			Usage:  "docker email",
 			EnvVar: "PLUGIN_EMAIL,DOCKER_EMAIL",
 		},
+		cli.StringFlag{
+			Name:   "repoRegistry",
+			Usage:  "docker repository",
+			EnvVar: "PLUGIN_REPO_REGISTRY",
+		},
+		cli.StringFlag{
+			Name:   "repoUsername",
+			Usage:  "docker repository",
+			EnvVar: "PLUGIN_REPO_USERNAME",
+		},
+		cli.StringFlag{
+			Name:   "repoPassword",
+			Usage:  "docker repository",
+			EnvVar: "PLUGIN_REPO_PASSWORD",
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -205,6 +220,9 @@ func run(c *cli.Context) error {
 			Pull:        c.BoolT("pull-image"),
 			Compress:    c.Bool("compress"),
 			Repo:        c.String("repo"),
+            RepoRegistry: c.String("repoRegistry"),
+            RepoUsername: c.String("repoUsername"),
+            RepoPassword: c.String("repoPassword"),
 			LabelSchema: c.StringSlice("label-schema"),
 		},
 		Daemon: docker.Daemon{
